@@ -63,8 +63,6 @@ var Jet =
 		m.throttle.setDoubleValue(0);
 		m.throttle_lever = props.globals.getNode("controls/engines/engine[" ~ n ~ "]/throttle-lever", 1);
 		m.throttle_lever.setDoubleValue(0);
-		m.mp_engine_status = props.globals.getNode("sim/multiplay/generic/string[8]", 1);
-		m.mp_engine_status.setValue(0);
 		# return our new object
 		return m;
 	},
@@ -104,7 +102,6 @@ var Jet =
 		if (me.running.getBoolValue() and !me.started)
 		{
 			me.running.setBoolValue(0);
-			#me.mp_engine_status.setValue(3);
 		}
 		if (me.cutoff.getBoolValue() or !me.serviceable.getBoolValue() or me.out_of_fuel.getBoolValue())
 		{
@@ -114,7 +111,6 @@ var Jet =
 			{
 				rpm += time_delta * me.spool_time;
 				me.rpm.setValue(rpm >= me.max_start_n1 ? me.max_start_n1 : rpm);
-				me.mp_engine_status.setValue(1);
 			}
 			else
 			{
@@ -124,13 +120,6 @@ var Jet =
                                 me.throttle.setDoubleValue(0);
 				me.throttle_lever.setDoubleValue(0);
 				me.started = 0;
-				
-				if ( me.rpm.getValue() > 0 ) {				
-				     me.mp_engine_status.setValue(3);
-					}
-				 else {
-				     me.mp_engine_status.setValue(0);
-					}
 			}
 		}
 		elsif (me.starter.getBoolValue())
@@ -145,13 +134,11 @@ var Jet =
 				{
 					me.running.setBoolValue(1);
 					me.starter.setBoolValue(0);
-					me.mp_engine_status.setValue(2);
 					me.started = 1;
 				}
 				else
 				{
 					me.running.setBoolValue(0);
-					me.mp_engine_status.setValue(1);
 				}
 			}
 		}
@@ -159,7 +146,6 @@ var Jet =
 		{
 			me.throttle_lever.setValue(me.idle_throttle + (1 - me.idle_throttle) * me.throttle.getValue());
 			me.rpm.setValue(me.n1.getValue());
-			me.mp_engine_status.setValue(2);
 		}
 	}
 };
